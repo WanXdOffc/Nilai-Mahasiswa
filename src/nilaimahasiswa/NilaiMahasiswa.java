@@ -4,7 +4,7 @@
  */
 package nilaimahasiswa;
 
-import nilaimahasiswa.view.Dashboard;
+import nilaimahasiswa.view.LoginForm;
 
 /**
  *
@@ -17,7 +17,7 @@ public class NilaiMahasiswa {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        new Dashboard().setVisible(true);
+        new LoginForm().setVisible(true);
         //new DBConnection().getConnection();
     }
     
