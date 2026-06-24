@@ -30,15 +30,31 @@ public class Course {
         return this.courseName;
     }
 
-    public String getCode() {
-        return code;
+    //setter
+    public String getCode() { 
+        return code; 
+    }
+    public String getCourseName() { 
+        return courseName; 
+    }
+    public int getSKS() { 
+        return sks; 
+    }
+    public int getSemester() { 
+        return semester; 
     }
 
-    public String getCourseName() {
-        return courseName;
+    //getter
+    public void setCode(String code) { 
+        this.code = code; 
     }
-
-    public int getSKS() {
-        return sks;
+    public void setCourseName(String name) { 
+        this.courseName = name; 
+    }
+    public void setSks(int sks) { 
+        this.sks = sks; 
+    }
+    public void setSemester(int semester) { 
+        this.semester = semester; 
     }
 }

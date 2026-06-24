@@ -1,74 +1,97 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package nilaimahasiswa.dao;
-package nilaimahasiswa.Student;
 
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import nilaimahasiswa.model.Student;
 import nilaimahasiswa.utils.DBConnection;
-/**
- *
- * @author iketu
- */
+
 public class StudentDAO {
-    private Connection connection;
-    public StudentDAO() {
-        try {
-            connection = DBConnection.getConnection();
-        } catch (SQLException ex) {
-            Logger.getLogger(StudentDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+    private final Connection connection;
+
+    public StudentDAO() throws SQLException {
+        this.connection = DBConnection.getConnection();
     }
-    // create User
-    public int create(Student student){
-        try{
-            String sql = "INSERT INTO students (cardID, NIM, name, studiProgram) VALUES(?,?,?,?)";
-            PreparedStatement stmt =connection.prepareStatement(sql);
-            stmt.setString(1, student.getCardID());
-            stmt.setString(2, student.getNim());
-            stmt.setString(3, student.getName());
-            stmt.setString(4, student.getStudyProgram());
-            stmt.executeUpdate();
-            return 1;
-            
-        }catch(SQLException e){
-              return 0;
-        }
-        
+
+    public int insert(Student s) throws SQLException {
+        String sql = "INSERT INTO mahasiswa VALUES (?,?,?,?)";
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setString(1, s.getNim());
+        stmt.setString(2, s.getName());
+        stmt.setString(3, s.getStudyProgram());
+        stmt.setString(4, s.getAngkatan());
+        return stmt.executeUpdate();
     }
-     // Select/read Users
-    public List<Student> getStudent(){
-        List<Student> students = new ArrayList<>();
-        
-        try{
-            String sql = "SELECT * FROM students";
-            PreparedStatement stmt =connection.prepareStatement(sql);
-            
-            ResultSet rs = stmt.executeQuery();
-            while(rs.next()){
-                int id = rs.getInt("studentID");
-                String cardID = rs.getString("cardID");
-                String NIM = rs.getString("NIM");
-                String name = rs.getString("name");
-                String studiProgram = rs.getString("studiProgram");
-                
-                students.add(new Student(cardID,name,NIM,studiProgram));
-                
-            }
-            
-        }catch(SQLException e){
-            e.printStackTrace();
-        }
-        return students;
+
+    public int update(Student s) throws SQLException {
+        String sql = "UPDATE mahasiswa SET nama=?, prodi=?, angkatan=? WHERE nim=?";
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setString(1, s.getName());
+        stmt.setString(2, s.getStudyProgram());
+        stmt.setString(3, s.getAngkatan());
+        stmt.setString(4, s.getNim());
+        return stmt.executeUpdate();
     }
-    
+
+    public int delete(String nim) throws SQLException {
+        String sql = "DELETE FROM mahasiswa WHERE nim=?";
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setString(1, nim);
+        return stmt.executeUpdate();
+    }
+
+    public List<Student> findAll() throws SQLException {
+        List<Student> list = new ArrayList<>();
+        String sql = "SELECT * FROM mahasiswa ORDER BY nim";
+        ResultSet rs = connection.createStatement().executeQuery(sql);
+        while (rs.next()) list.add(map(rs));
+        return list;
+    }
+
+    public List<Student> findByKeyword(String keyword) throws SQLException {
+        List<Student> list = new ArrayList<>();
+        String sql = "SELECT * FROM mahasiswa WHERE nim LIKE ? OR nama LIKE ?";
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        String like = "%" + keyword + "%";
+        stmt.setString(1, like);
+        stmt.setString(2, like);
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) list.add(map(rs));
+        return list;
+    }
+
+    public List<Student> findPaged(int page, int limit) throws SQLException {
+        List<Student> list = new ArrayList<>();
+        String sql = "SELECT * FROM mahasiswa ORDER BY nim LIMIT ? OFFSET ?";
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setInt(1, limit);
+        stmt.setInt(2, (page - 1) * limit);
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) list.add(map(rs));
+        return list;
+    }
+
+    public boolean isNimExists(String nim) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM mahasiswa WHERE nim=?";
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setString(1, nim);
+        ResultSet rs = stmt.executeQuery();
+        return rs.next() && rs.getInt(1) > 0;
+    }
+
+    public int count() throws SQLException {
+        ResultSet rs = connection.createStatement()
+            .executeQuery("SELECT COUNT(*) FROM mahasiswa");
+        return rs.next() ? rs.getInt(1) : 0;
+    }
+
+    private Student map(ResultSet rs) throws SQLException {
+        return new Student(
+            rs.getString("nama"),
+            rs.getString("nim"),
+            rs.getString("prodi"),
+            rs.getString("angkatan")
+        );
+    }
 }

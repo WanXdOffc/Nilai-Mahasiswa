@@ -1,52 +1,63 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package nilaimahasiswa.model;
 
-import nilaimahasiswa.model.Course;
 
-/**
- *
- * @author iketu
- */
 public class KRS {
     private Course course;
     private double score;
     private String grade;
-    private Lecturer lecturer;
-   
 
-    public KRS() {
-    }
+    private int id;
+    private String nim;
+    private int semester;
+    private String tahunAjaran;
 
-    public KRS(Course course, double score) {
+    public KRS(int id, String nim, Course course,
+               double score, int semester, String tahunAjaran) {
+        this.id = id;
+        this.nim = nim;
         this.course = course;
         this.score = score;
-        this.grade = setGrade();
-        this.lecturer = lecturer;
-    }
-    
-    public Lecturer getLecturer(){
-        return lecturer;
+        this.grade = hitungGrade(score);
+        this.semester = semester;
+        this.tahunAjaran = tahunAjaran;
     }
 
     public Course getCourse() {
         return course;
     }
-
     public double getScore() {
         return score;
     }
-
     public String getGrade() {
         return grade;
     }
+    
+    public int getId() {
+        return id;
+    }
+    public String getNim() {
+        return nim;
+    }
+    public int getSemester() {
+        return semester;
+    }
+    public String getTahunAjaran() {
+        return tahunAjaran;
+    }
+
+    public static String hitungGrade(double score) {
+        if (score >= 85) return "A";
+        else if (score > 75) return "B";
+        else if (score >= 60) return "C";
+        else return "D";
+    }
 
     public String setGrade() {
-        if(score >= 85) return "A";
-        else if(score > 75) return "B";
-        else if(score >= 60) return "C";
-        else return "D";
+        return hitungGrade(this.score);
+    }
+
+    @Override
+    public String toString() {
+        return course.getCourseName() + " | " + grade;
     }
 }

@@ -18,16 +18,8 @@ public class Student extends Person {
     private String angkatan;
     private ArrayList<KRS> krsList;
     
-    public Student(String idCard, String name, String nim, String studyProgram) {
-        super(idCard, name);
-        this.nim = nim;
-        this.studyProgram = studyProgram;
-        this.angkatan = "";
-        krsList = new ArrayList<>();
-    }
-    
-    public Student(String idCard, String name, String nim, String studyProgram, String angkatan) {
-        super(idCard, name);
+    public Student(String name, String nim, String studyProgram, String angkatan) {
+        super(nim, name);
         this.nim = nim;
         this.studyProgram = studyProgram;
         this.angkatan = angkatan;
@@ -38,20 +30,29 @@ public class Student extends Person {
     public String toString() {
         return this.name;
     }
-
-    public String getNim() {
-        return nim;
+    public String getNim() { 
+        return nim; 
+    }
+    public String getName() { 
+        return name; 
+    }
+    public String getStudyProgram() { 
+        return studyProgram; 
+    }
+    public String getAngkatan() { 
+        return angkatan; 
     }
 
-    public String getName() {
-        return name;
+    public void setNim(String nim) { 
+        this.nim = nim; 
     }
-
-    public String getStudyProgram() {
-        return studyProgram;
+    public void setName(String name) { 
+        this.name = name; 
     }
-
-    public void addKRS(KRS krs) {
-        krsList.add(krs);
+    public void setStudyProgram(String sp) { 
+        this.studyProgram = sp; 
+    }
+    public void setAngkatan(String angkatan) { 
+        this.angkatan = angkatan; 
     }
 }
