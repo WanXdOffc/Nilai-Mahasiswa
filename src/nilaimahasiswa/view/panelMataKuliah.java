@@ -62,24 +62,25 @@ public class panelMataKuliah extends javax.swing.JPanel {
         jPanelFormDataMahasiswa.putClientProperty("component.arc", 16);
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        jTextFieldCodeMatkul = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jTextField4 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField5 = new javax.swing.JTextField();
+        jButtonSave = new javax.swing.JButton();
+        jTextFieldSKS = new javax.swing.JTextField();
+        jTextFieldName = new javax.swing.JTextField();
+        jTextFieldSemester = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
+        jButtonDelete = new javax.swing.JButton();
         jPanelTabel1 = new javax.swing.JPanel();
         jPanelFormDataMahasiswa.putClientProperty("component.arc", 16);
         jLabel4 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableDataMatkul = new javax.swing.JTable();
-        jLabel9 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jTextField2 = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
+        jLabelPage = new javax.swing.JLabel();
+        jButtonNext = new javax.swing.JButton();
+        jButtonBack = new javax.swing.JButton();
+        jTextFieldSearch = new javax.swing.JTextField();
+        jLabelTotal = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(245, 245, 245));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -101,43 +102,41 @@ public class panelMataKuliah extends javax.swing.JPanel {
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("Kode");
 
-        jTextField1.setBackground(new java.awt.Color(0, 51, 153));
-        jTextField1.setForeground(new java.awt.Color(255, 255, 255));
-        jTextField1.setText("Masukkan NIM");
-        jTextField1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 4, true));
-        jTextField1.addActionListener(this::jTextField1ActionPerformed);
+        jTextFieldCodeMatkul.setBackground(new java.awt.Color(0, 51, 153));
+        jTextFieldCodeMatkul.setForeground(new java.awt.Color(255, 255, 255));
+        jTextFieldCodeMatkul.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 4, true));
+        jTextFieldCodeMatkul.addActionListener(this::jTextFieldCodeMatkulActionPerformed);
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel6.setText("Semester");
 
-        jButton1.setBackground(new java.awt.Color(0, 102, 204));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jButton1.setText("Simpan");
-        jButton1.addActionListener(this::jButton1ActionPerformed);
+        jButtonSave.setBackground(new java.awt.Color(0, 102, 204));
+        jButtonSave.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButtonSave.setText("Simpan");
+        jButtonSave.addActionListener(this::jButtonSaveActionPerformed);
 
-        jTextField4.setBackground(new java.awt.Color(0, 51, 153));
-        jTextField4.setForeground(new java.awt.Color(255, 255, 255));
-        jTextField4.setText("Masukkan NIM");
-        jTextField4.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 4, true));
-        jTextField4.addActionListener(this::jTextField4ActionPerformed);
+        jTextFieldSKS.setBackground(new java.awt.Color(0, 51, 153));
+        jTextFieldSKS.setForeground(new java.awt.Color(255, 255, 255));
+        jTextFieldSKS.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 4, true));
+        jTextFieldSKS.addActionListener(this::jTextFieldSKSActionPerformed);
 
-        jTextField3.setBackground(new java.awt.Color(0, 51, 153));
-        jTextField3.setForeground(new java.awt.Color(255, 255, 255));
-        jTextField3.setText("Masukkan NIM");
-        jTextField3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 4, true));
-        jTextField3.addActionListener(this::jTextField3ActionPerformed);
+        jTextFieldName.setBackground(new java.awt.Color(0, 51, 153));
+        jTextFieldName.setForeground(new java.awt.Color(255, 255, 255));
+        jTextFieldName.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 4, true));
+        jTextFieldName.addActionListener(this::jTextFieldNameActionPerformed);
 
-        jTextField5.setBackground(new java.awt.Color(0, 51, 153));
-        jTextField5.setForeground(new java.awt.Color(255, 255, 255));
-        jTextField5.setText("Masukkan NIM");
-        jTextField5.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 4, true));
-        jTextField5.addActionListener(this::jTextField5ActionPerformed);
+        jTextFieldSemester.setBackground(new java.awt.Color(0, 51, 153));
+        jTextFieldSemester.setForeground(new java.awt.Color(255, 255, 255));
+        jTextFieldSemester.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 4, true));
+        jTextFieldSemester.addActionListener(this::jTextFieldSemesterActionPerformed);
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel8.setText("SKS");
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel10.setText("Nama");
+
+        jButtonDelete.setText("Delete");
 
         javax.swing.GroupLayout jPanelFormDataMahasiswaLayout = new javax.swing.GroupLayout(jPanelFormDataMahasiswa);
         jPanelFormDataMahasiswa.setLayout(jPanelFormDataMahasiswaLayout);
@@ -149,21 +148,24 @@ public class panelMataKuliah extends javax.swing.JPanel {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelFormDataMahasiswaLayout.createSequentialGroup()
                         .addGroup(jPanelFormDataMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanelFormDataMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jTextField4, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
-                                .addComponent(jTextField1))
+                                .addComponent(jTextFieldSKS, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
+                                .addComponent(jTextFieldCodeMatkul))
                             .addComponent(jLabel8))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanelFormDataMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel6)
                             .addGroup(jPanelFormDataMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
-                                .addComponent(jTextField5)))
+                                .addComponent(jTextFieldName, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
+                                .addComponent(jTextFieldSemester)))
                         .addGap(18, 18, 18))
                     .addGroup(jPanelFormDataMahasiswaLayout.createSequentialGroup()
                         .addGroup(jPanelFormDataMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
                             .addComponent(jLabel3)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanelFormDataMahasiswaLayout.createSequentialGroup()
+                                .addComponent(jButtonSave, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButtonDelete))
                             .addGroup(jPanelFormDataMahasiswaLayout.createSequentialGroup()
                                 .addGap(339, 339, 339)
                                 .addComponent(jLabel10)))
@@ -179,21 +181,23 @@ public class panelMataKuliah extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jTextFieldCodeMatkul, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanelFormDataMahasiswaLayout.createSequentialGroup()
                         .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jTextFieldName, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(21, 21, 21)
                 .addGroup(jPanelFormDataMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanelFormDataMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldSKS, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldSemester, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanelFormDataMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonSave, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(29, 29, 29))
         );
 
@@ -218,13 +222,13 @@ public class panelMataKuliah extends javax.swing.JPanel {
         ));
         jScrollPane1.setViewportView(jTableDataMatkul);
 
-        jLabel9.setText("1 - 10");
+        jLabelPage.setText("1 - 10");
 
-        jButton2.setText("Next");
-        jButton2.addActionListener(this::jButton2ActionPerformed);
+        jButtonNext.setText("Next");
+        jButtonNext.addActionListener(this::jButtonNextActionPerformed);
 
-        jButton3.setText("Back");
-        jButton3.addActionListener(this::jButton3ActionPerformed);
+        jButtonBack.setText("Back");
+        jButtonBack.addActionListener(this::jButtonBackActionPerformed);
 
         javax.swing.GroupLayout jPanelTabel1Layout = new javax.swing.GroupLayout(jPanelTabel1);
         jPanelTabel1.setLayout(jPanelTabel1Layout);
@@ -240,11 +244,11 @@ public class panelMataKuliah extends javax.swing.JPanel {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 631, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanelTabel1Layout.createSequentialGroup()
                         .addGap(231, 231, 231)
-                        .addComponent(jButton3)
+                        .addComponent(jButtonBack)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel9)
+                        .addComponent(jLabelPage)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton2)))
+                        .addComponent(jButtonNext)))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
         jPanelTabel1Layout.setVerticalGroup(
@@ -256,60 +260,60 @@ public class panelMataKuliah extends javax.swing.JPanel {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanelTabel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(jLabelPage)
+                    .addComponent(jButtonNext)
+                    .addComponent(jButtonBack))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         add(jPanelTabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 380, 670, -1));
 
-        jTextField2.setText("Cari berdasarkan nim/nama");
-        jTextField2.addActionListener(this::jTextField2ActionPerformed);
-        add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 340, 570, 30));
+        jTextFieldSearch.addActionListener(this::jTextFieldSearchActionPerformed);
+        add(jTextFieldSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 340, 570, 30));
 
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel7.setText("Total : 120");
-        add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 340, -1, 30));
+        jLabelTotal.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabelTotal.setText("Total : 120");
+        add(jLabelTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 340, -1, 30));
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void jTextFieldCodeMatkulActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldCodeMatkulActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_jTextFieldCodeMatkulActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jButtonSaveActionPerformed
 
-    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
+    private void jTextFieldSKSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldSKSActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField4ActionPerformed
+    }//GEN-LAST:event_jTextFieldSKSActionPerformed
 
-    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
+    private void jTextFieldNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3ActionPerformed
+    }//GEN-LAST:event_jTextFieldNameActionPerformed
 
-    private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
+    private void jTextFieldSemesterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldSemesterActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField5ActionPerformed
+    }//GEN-LAST:event_jTextFieldSemesterActionPerformed
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+    private void jTextFieldSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldSearchActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    }//GEN-LAST:event_jTextFieldSearchActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void jButtonNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNextActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_jButtonNextActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void jButtonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBackActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_jButtonBackActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButtonBack;
+    private javax.swing.JButton jButtonDelete;
+    private javax.swing.JButton jButtonNext;
+    private javax.swing.JButton jButtonSave;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
@@ -317,17 +321,17 @@ public class panelMataKuliah extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabelPage;
+    private javax.swing.JLabel jLabelTotal;
     private javax.swing.JPanel jPanelFormDataMahasiswa;
     private javax.swing.JPanel jPanelTabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableDataMatkul;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
+    private javax.swing.JTextField jTextFieldCodeMatkul;
+    private javax.swing.JTextField jTextFieldName;
+    private javax.swing.JTextField jTextFieldSKS;
+    private javax.swing.JTextField jTextFieldSearch;
+    private javax.swing.JTextField jTextFieldSemester;
     // End of variables declaration//GEN-END:variables
 }

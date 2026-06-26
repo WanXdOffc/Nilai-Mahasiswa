@@ -13,7 +13,7 @@ import nilaimahasiswa.model.Student;
 public class StudentController {
 
     private final StudentDAO dao;
-    public static final int DATA_PER_HALAMAN = 10;
+    public static final int DATA_PER_HALAMAN = 7;
 
     public StudentController() throws SQLException {
         this.dao = new StudentDAO();

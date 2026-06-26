@@ -224,7 +224,9 @@ public class LoginForm extends javax.swing.JFrame {
                 "Selamat datang, " + user.getUsername() + "!",
                 "Login Berhasil",
                 javax.swing.JOptionPane.INFORMATION_MESSAGE);
-            new Dashboard().setVisible(true);
+            Dashboard dashboard = new Dashboard();
+            dashboard.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+            dashboard.setVisible(true);
             this.dispose(); // tutup LoginForm
         } else {
             // Login gagal

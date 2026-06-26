@@ -4,47 +4,312 @@
  */
 package nilaimahasiswa.view;
 
-/**
- *
- * @author iketu
- */
+import java.util.List;
+import nilaimahasiswa.controller.LecturerController;
+import nilaimahasiswa.model.Lecturer;
+
 public class panelDosen extends javax.swing.JPanel {
 
-    /**
-     * Creates new form panelDashboard
-     */
+    private LecturerController controller;
+    private int halamanSaatIni = 1;
+    private String nidnDipilih = "";
+    private boolean modeEdit = false;
+    private boolean sedangCari = false;
+
     public panelDosen() {
         initComponents();
-        // Mengatur pewarnaan otomatis pada kolom Nilai (kolom indeks ke-3)
-        jTableDataDosen.getColumnModel().getColumn(3).setCellRenderer(new javax.swing.table.DefaultTableCellRenderer() {
-            @Override
-            public java.awt.Component getTableCellRendererComponent(javax.swing.JTable table, Object value, 
-                    boolean isSelected, boolean hasFocus, int row, int column) {
+        try {
+            controller = new LecturerController();
+            LecturerController.DATA_PER_HALAMAN = 7;
+            inisialisasi();
+        } catch (Exception e) {
+            tampilError("Gagal koneksi database: " + e.getMessage());
+        }
+    }
 
-                javax.swing.JLabel label = (javax.swing.JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                label.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+    // ============================================================
+    // SETUP
+    // ============================================================
 
-                // Aktifkan FlatLaf Badge style untuk label di dalam tabel
-                label.putClientProperty("component.arc", 8);
-                label.setOpaque(true);
+    private void inisialisasi() throws Exception {
+        setupKolomTabel();
+        setupListenerTabel();
+        setupSearchListener();
+        setupPlaceholder();
+        muatData();
+    }
 
-                if (value != null) {
-                    String nilai = value.toString();
-                    if (nilai.equals("A")) {
-                        label.setBackground(new java.awt.Color(230, 245, 233)); // Hijau Muda
-                        label.setForeground(new java.awt.Color(46, 125, 50));   // Hijau Tua
-                    } else if (nilai.equals("B")) {
-                        label.setBackground(new java.awt.Color(232, 240, 254)); // Biru Muda
-                        label.setForeground(new java.awt.Color(25, 118, 210));  // Biru Tua
-                    } else if (nilai.equals("C")) {
-                        label.setBackground(new java.awt.Color(255, 243, 224)); // Oranye Muda
-                        label.setForeground(new java.awt.Color(230, 81, 0));    // Oranye Tua
-                    }
+    private void setupKolomTabel() {
+        String[] kolom = {"NIDN", "Nama", "Keahlian", "No HP"};
+        javax.swing.table.DefaultTableModel model =
+            new javax.swing.table.DefaultTableModel(kolom, 0) {
+                @Override
+                public boolean isCellEditable(int row, int col) {
+                    return false;
                 }
-                return label;
-            }
-        });
+            };
+        jTableDataDosen.setModel(model);
+        jTableDataDosen.setSelectionMode(
+            javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jTableDataDosen.getTableHeader().setReorderingAllowed(false);
+        jTableDataDosen.setRowHeight(28);
 
+        jTableDataDosen.getColumnModel().getColumn(0).setPreferredWidth(120);
+        jTableDataDosen.getColumnModel().getColumn(1).setPreferredWidth(200);
+        jTableDataDosen.getColumnModel().getColumn(2).setPreferredWidth(180);
+        jTableDataDosen.getColumnModel().getColumn(3).setPreferredWidth(130);
+
+        // Warna baris selang-seling
+        jTableDataDosen.setDefaultRenderer(Object.class,
+            new javax.swing.table.DefaultTableCellRenderer() {
+                @Override
+                public java.awt.Component getTableCellRendererComponent(
+                    javax.swing.JTable table, Object value,
+                    boolean isSelected, boolean hasFocus, int row, int col) {
+                    super.getTableCellRendererComponent(
+                        table, value, isSelected, hasFocus, row, col);
+                    if (!isSelected) {
+                        setBackground(row % 2 == 0
+                            ? java.awt.Color.WHITE
+                            : new java.awt.Color(245, 247, 250));
+                    }
+                    setBorder(javax.swing.BorderFactory
+                        .createEmptyBorder(0, 8, 0, 8));
+                    return this;
+                }
+            });
+    }
+
+    private void setupListenerTabel() {
+        jTableDataDosen.getSelectionModel()
+            .addListSelectionListener(e -> {
+                if (!e.getValueIsAdjusting()) {
+                    isiFormDariTabel();
+                }
+            });
+    }
+
+    private void setupSearchListener() {
+        jTextFieldSearch.getDocument().addDocumentListener(
+            new javax.swing.event.DocumentListener() {
+                public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                    jalankanCari();
+                }
+                public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                    jalankanCari();
+                }
+                public void changedUpdate(javax.swing.event.DocumentEvent e) {}
+            }
+        );
+    }
+
+    private void setupPlaceholder() {
+        jTextFieldNIDN.putClientProperty(
+            "JTextField.placeholderText", "cth: 0011223344");
+        jTextFieldNama.putClientProperty(
+            "JTextField.placeholderText", "cth: Dr. Budi Santoso");
+        jTextFieldMatkul.putClientProperty(
+            "JTextField.placeholderText", "cth: Pemrograman Web");
+        jTextFieldNoHP.putClientProperty(
+            "JTextField.placeholderText", "cth: 081234567890");
+        jTextFieldSearch.putClientProperty(
+            "JTextField.placeholderText", "Cari berdasarkan NIDN atau Nama...");
+    }
+
+    // ============================================================
+    // MUAT DATA
+    // ============================================================
+
+    private void muatData() throws Exception {
+        javax.swing.table.DefaultTableModel model =
+            (javax.swing.table.DefaultTableModel) jTableDataDosen.getModel();
+        model.setRowCount(0);
+
+        List<Lecturer> list = controller.getHalaman(halamanSaatIni);
+        for (Lecturer l : list) {
+            model.addRow(new Object[]{
+                l.getNidn(), l.getName(),
+                l.getExpertise(), l.getNoHp()
+            });
+        }
+        updateLabelInfo();
+    }
+
+    private void updateLabelInfo() throws Exception {
+        int total    = controller.getTotalData();
+        int totalHal = controller.getTotalHalaman();
+
+        jLabelTotal.setText("Total : " + total + " data");
+        jLabelHalaman.setText(
+            "Halaman " + halamanSaatIni + " dari " + totalHal);
+
+        jButtonNext.setEnabled(!sedangCari && halamanSaatIni < totalHal);
+        jButtonBack.setEnabled(!sedangCari && halamanSaatIni > 1);
+    }
+
+    // ============================================================
+    // FORM
+    // ============================================================
+
+    private void isiFormDariTabel() {
+        int baris = jTableDataDosen.getSelectedRow();
+        if (baris < 0) return;
+
+        nidnDipilih = jTableDataDosen.getValueAt(baris, 0).toString();
+        jTextFieldNIDN.setText(nidnDipilih);
+        jTextFieldNama.setText(
+            jTableDataDosen.getValueAt(baris, 1).toString());
+        jTextFieldMatkul.setText(
+            jTableDataDosen.getValueAt(baris, 2).toString());
+        jTextFieldNoHP.setText(
+            jTableDataDosen.getValueAt(baris, 3).toString());
+
+        jTextFieldNIDN.setEditable(false);
+        modeEdit = true;
+    }
+
+    private void resetForm() {
+        jTextFieldNIDN.setText("");
+        jTextFieldNama.setText("");
+        jTextFieldMatkul.setText("");
+        jTextFieldNoHP.setText("");
+        jTextFieldNIDN.setEditable(true);
+        nidnDipilih  = "";
+        modeEdit     = false;
+        sedangCari   = false;
+        jTableDataDosen.clearSelection();
+    }
+
+    // ============================================================
+    // CRUD
+    // ============================================================
+
+    private void simpan() {
+        String nidn     = jTextFieldNIDN.getText().trim();
+        String nama     = jTextFieldNama.getText().trim();
+        String keahlian = jTextFieldMatkul.getText().trim();
+        String noHp     = jTextFieldNoHP.getText().trim();
+
+        try {
+            if (modeEdit) {
+                controller.update(nidn, nama, keahlian, noHp);
+                tampilPesan("Data dosen berhasil diupdate!");
+            } else {
+                controller.tambah(nidn, nama, keahlian, noHp);
+                tampilPesan("Data dosen berhasil disimpan!");
+            }
+            resetForm();
+            halamanSaatIni = 1;
+            muatData();
+        } catch (Exception e) {
+            tampilError(e.getMessage());
+        }
+    }
+
+    private void hapus() {
+        if (nidnDipilih.isEmpty()) {
+            tampilError("Pilih dosen yang akan dihapus!");
+            return;
+        }
+
+        int konfirm = javax.swing.JOptionPane.showConfirmDialog(
+            this,
+            "Yakin hapus dosen:\n" +
+            "NIDN : " + nidnDipilih + "\n" +
+            "Nama : " + jTextFieldNama.getText(),
+            "Konfirmasi Hapus",
+            javax.swing.JOptionPane.YES_NO_OPTION,
+            javax.swing.JOptionPane.WARNING_MESSAGE
+        );
+
+        if (konfirm == javax.swing.JOptionPane.YES_OPTION) {
+            try {
+                controller.hapus(nidnDipilih);
+                tampilPesan("Dosen berhasil dihapus!");
+                resetForm();
+                halamanSaatIni = 1;
+                muatData();
+            } catch (Exception e) {
+                tampilError(e.getMessage());
+            }
+        }
+    }
+
+    // ============================================================
+    // PENCARIAN
+    // ============================================================
+
+    private void jalankanCari() {
+        String keyword = jTextFieldSearch.getText().trim();
+
+        try {
+            javax.swing.table.DefaultTableModel model =
+                (javax.swing.table.DefaultTableModel) jTableDataDosen.getModel();
+            model.setRowCount(0);
+
+            if (keyword.isEmpty()) {
+                sedangCari     = false;
+                halamanSaatIni = 1;
+                muatData();
+                return;
+            }
+
+            sedangCari = true;
+            List<Lecturer> hasil = controller.cari(keyword);
+
+            for (Lecturer l : hasil) {
+                model.addRow(new Object[]{
+                    l.getNidn(), l.getName(),
+                    l.getExpertise(), l.getNoHp()
+                });
+            }
+
+            jLabelTotal.setText("Ditemukan : " + hasil.size() + " data");
+            jLabelHalaman.setText("Mode pencarian");
+            jButtonNext.setEnabled(false);
+            jButtonBack.setEnabled(false);
+
+        } catch (Exception e) {
+            tampilError(e.getMessage());
+        }
+    }
+
+    // ============================================================
+    // PAGINATION
+    // ============================================================
+
+    private void nextHalaman() {
+        try {
+            halamanSaatIni++;
+            muatData();
+        } catch (Exception e) {
+            tampilError(e.getMessage());
+        }
+    }
+
+    private void backHalaman() {
+        try {
+            halamanSaatIni--;
+            muatData();
+        } catch (Exception e) {
+            tampilError(e.getMessage());
+        }
+    }
+
+    // ============================================================
+    // HELPER
+    // ============================================================
+
+    private void tampilPesan(String pesan) {
+        javax.swing.JOptionPane.showMessageDialog(
+            this, pesan, "Sukses",
+            javax.swing.JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void tampilError(String pesan) {
+        javax.swing.JOptionPane.showMessageDialog(
+            this, pesan, "Error",
+            javax.swing.JOptionPane.ERROR_MESSAGE);
     }
 
     /**
@@ -62,24 +327,25 @@ public class panelDosen extends javax.swing.JPanel {
         jPanelFormDataMahasiswa.putClientProperty("component.arc", 16);
         jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        jTextFieldNIDN = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jTextField4 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField5 = new javax.swing.JTextField();
+        jButtonSave = new javax.swing.JButton();
+        jTextFieldMatkul = new javax.swing.JTextField();
+        jTextFieldNama = new javax.swing.JTextField();
+        jTextFieldNoHP = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
+        jButtonDelete = new javax.swing.JButton();
         jPanelTabel1 = new javax.swing.JPanel();
         jPanelFormDataMahasiswa.putClientProperty("component.arc", 16);
         jLabel4 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableDataDosen = new javax.swing.JTable();
-        jLabel9 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jTextField2 = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
+        jLabelHalaman = new javax.swing.JLabel();
+        jButtonNext = new javax.swing.JButton();
+        jButtonBack = new javax.swing.JButton();
+        jTextFieldSearch = new javax.swing.JTextField();
+        jLabelTotal = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(245, 245, 245));
         setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -101,43 +367,42 @@ public class panelDosen extends javax.swing.JPanel {
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("NIDN");
 
-        jTextField1.setBackground(new java.awt.Color(0, 51, 153));
-        jTextField1.setForeground(new java.awt.Color(255, 255, 255));
-        jTextField1.setText("Masukkan NIM");
-        jTextField1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 4, true));
-        jTextField1.addActionListener(this::jTextField1ActionPerformed);
+        jTextFieldNIDN.setBackground(new java.awt.Color(0, 51, 153));
+        jTextFieldNIDN.setForeground(new java.awt.Color(255, 255, 255));
+        jTextFieldNIDN.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 4, true));
+        jTextFieldNIDN.addActionListener(this::jTextFieldNIDNActionPerformed);
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel6.setText("Nomer HP");
 
-        jButton1.setBackground(new java.awt.Color(0, 102, 204));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jButton1.setText("Simpan");
-        jButton1.addActionListener(this::jButton1ActionPerformed);
+        jButtonSave.setBackground(new java.awt.Color(0, 102, 204));
+        jButtonSave.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButtonSave.setText("Simpan");
+        jButtonSave.addActionListener(this::jButtonSaveActionPerformed);
 
-        jTextField4.setBackground(new java.awt.Color(0, 51, 153));
-        jTextField4.setForeground(new java.awt.Color(255, 255, 255));
-        jTextField4.setText("Masukkan NIM");
-        jTextField4.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 4, true));
-        jTextField4.addActionListener(this::jTextField4ActionPerformed);
+        jTextFieldMatkul.setBackground(new java.awt.Color(0, 51, 153));
+        jTextFieldMatkul.setForeground(new java.awt.Color(255, 255, 255));
+        jTextFieldMatkul.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 4, true));
+        jTextFieldMatkul.addActionListener(this::jTextFieldMatkulActionPerformed);
 
-        jTextField3.setBackground(new java.awt.Color(0, 51, 153));
-        jTextField3.setForeground(new java.awt.Color(255, 255, 255));
-        jTextField3.setText("Masukkan NIM");
-        jTextField3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 4, true));
-        jTextField3.addActionListener(this::jTextField3ActionPerformed);
+        jTextFieldNama.setBackground(new java.awt.Color(0, 51, 153));
+        jTextFieldNama.setForeground(new java.awt.Color(255, 255, 255));
+        jTextFieldNama.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 4, true));
+        jTextFieldNama.addActionListener(this::jTextFieldNamaActionPerformed);
 
-        jTextField5.setBackground(new java.awt.Color(0, 51, 153));
-        jTextField5.setForeground(new java.awt.Color(255, 255, 255));
-        jTextField5.setText("Masukkan NIM");
-        jTextField5.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 4, true));
-        jTextField5.addActionListener(this::jTextField5ActionPerformed);
+        jTextFieldNoHP.setBackground(new java.awt.Color(0, 51, 153));
+        jTextFieldNoHP.setForeground(new java.awt.Color(255, 255, 255));
+        jTextFieldNoHP.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 4, true));
+        jTextFieldNoHP.addActionListener(this::jTextFieldNoHPActionPerformed);
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel8.setText("Mata kuliah");
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel10.setText("Nama");
+
+        jButtonDelete.setText("Delete");
+        jButtonDelete.addActionListener(this::jButtonDeleteActionPerformed);
 
         javax.swing.GroupLayout jPanelFormDataMahasiswaLayout = new javax.swing.GroupLayout(jPanelFormDataMahasiswa);
         jPanelFormDataMahasiswa.setLayout(jPanelFormDataMahasiswaLayout);
@@ -149,21 +414,24 @@ public class panelDosen extends javax.swing.JPanel {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelFormDataMahasiswaLayout.createSequentialGroup()
                         .addGroup(jPanelFormDataMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanelFormDataMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(jTextField4, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
-                                .addComponent(jTextField1))
+                                .addComponent(jTextFieldMatkul, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
+                                .addComponent(jTextFieldNIDN))
                             .addComponent(jLabel8))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanelFormDataMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel6)
                             .addGroup(jPanelFormDataMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
-                                .addComponent(jTextField5)))
+                                .addComponent(jTextFieldNama, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
+                                .addComponent(jTextFieldNoHP)))
                         .addGap(18, 18, 18))
                     .addGroup(jPanelFormDataMahasiswaLayout.createSequentialGroup()
                         .addGroup(jPanelFormDataMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
                             .addComponent(jLabel3)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanelFormDataMahasiswaLayout.createSequentialGroup()
+                                .addComponent(jButtonSave, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButtonDelete))
                             .addGroup(jPanelFormDataMahasiswaLayout.createSequentialGroup()
                                 .addGap(339, 339, 339)
                                 .addComponent(jLabel10)))
@@ -179,21 +447,23 @@ public class panelDosen extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jTextFieldNIDN, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanelFormDataMahasiswaLayout.createSequentialGroup()
                         .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jTextFieldNama, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(21, 21, 21)
                 .addGroup(jPanelFormDataMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanelFormDataMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldMatkul, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldNoHP, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanelFormDataMahasiswaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonSave, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonDelete, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(29, 29, 29))
         );
 
@@ -207,24 +477,21 @@ public class panelDosen extends javax.swing.JPanel {
 
         jTableDataDosen.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "NIDN", "Nama", "Mata Kuliah", "No HP"
             }
         ));
         jScrollPane1.setViewportView(jTableDataDosen);
 
-        jLabel9.setText("1 - 10");
+        jLabelHalaman.setText("1 - 10");
 
-        jButton2.setText("Next");
-        jButton2.addActionListener(this::jButton2ActionPerformed);
+        jButtonNext.setText("Next");
+        jButtonNext.addActionListener(this::jButtonNextActionPerformed);
 
-        jButton3.setText("Back");
-        jButton3.addActionListener(this::jButton3ActionPerformed);
+        jButtonBack.setText("Back");
+        jButtonBack.addActionListener(this::jButtonBackActionPerformed);
 
         javax.swing.GroupLayout jPanelTabel1Layout = new javax.swing.GroupLayout(jPanelTabel1);
         jPanelTabel1.setLayout(jPanelTabel1Layout);
@@ -240,11 +507,11 @@ public class panelDosen extends javax.swing.JPanel {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 631, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanelTabel1Layout.createSequentialGroup()
                         .addGap(231, 231, 231)
-                        .addComponent(jButton3)
+                        .addComponent(jButtonBack)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel9)
+                        .addComponent(jLabelHalaman)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton2)))
+                        .addComponent(jButtonNext)))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
         jPanelTabel1Layout.setVerticalGroup(
@@ -256,60 +523,64 @@ public class panelDosen extends javax.swing.JPanel {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanelTabel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(jLabelHalaman)
+                    .addComponent(jButtonNext)
+                    .addComponent(jButtonBack))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         add(jPanelTabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 380, 670, -1));
 
-        jTextField2.setText("Cari berdasarkan nim/nama");
-        jTextField2.addActionListener(this::jTextField2ActionPerformed);
-        add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 340, 570, 30));
+        jTextFieldSearch.addActionListener(this::jTextFieldSearchActionPerformed);
+        add(jTextFieldSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 340, 570, 30));
 
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel7.setText("Total : 120");
-        add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 340, -1, 30));
+        jLabelTotal.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabelTotal.setText("Total : 120");
+        add(jLabelTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 340, 70, 30));
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void jTextFieldNIDNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNIDNActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_jTextFieldNIDNActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
+        simpan();
+    }//GEN-LAST:event_jButtonSaveActionPerformed
 
-    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
+    private void jTextFieldMatkulActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldMatkulActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField4ActionPerformed
+    }//GEN-LAST:event_jTextFieldMatkulActionPerformed
 
-    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
+    private void jTextFieldNamaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNamaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3ActionPerformed
+    }//GEN-LAST:event_jTextFieldNamaActionPerformed
 
-    private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
+    private void jTextFieldNoHPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNoHPActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField5ActionPerformed
+    }//GEN-LAST:event_jTextFieldNoHPActionPerformed
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+    private void jTextFieldSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldSearchActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    }//GEN-LAST:event_jTextFieldSearchActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void jButtonNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNextActionPerformed
+        nextHalaman();
+    }//GEN-LAST:event_jButtonNextActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+    private void jButtonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBackActionPerformed
+        backHalaman();
+    }//GEN-LAST:event_jButtonBackActionPerformed
+
+    private void jButtonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteActionPerformed
+        hapus();
+    }//GEN-LAST:event_jButtonDeleteActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButtonBack;
+    private javax.swing.JButton jButtonDelete;
+    private javax.swing.JButton jButtonNext;
+    private javax.swing.JButton jButtonSave;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
@@ -317,17 +588,17 @@ public class panelDosen extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabelHalaman;
+    private javax.swing.JLabel jLabelTotal;
     private javax.swing.JPanel jPanelFormDataMahasiswa;
     private javax.swing.JPanel jPanelTabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableDataDosen;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
+    private javax.swing.JTextField jTextFieldMatkul;
+    private javax.swing.JTextField jTextFieldNIDN;
+    private javax.swing.JTextField jTextFieldNama;
+    private javax.swing.JTextField jTextFieldNoHP;
+    private javax.swing.JTextField jTextFieldSearch;
     // End of variables declaration//GEN-END:variables
 }

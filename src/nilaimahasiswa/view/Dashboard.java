@@ -24,21 +24,26 @@ public class Dashboard extends javax.swing.JFrame {
     public Dashboard() {
         initComponents();
         
-        setSize(940, 740);
-        setLocationRelativeTo(null);
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+        setMinimumSize(new java.awt.Dimension(900, 600));
 
-        // 2. Hilangkan border bawaan JScrollPane agar bersih & modern ala FlatLaf
+        // Hapus border scroll
         jScrollWadah.setBorder(null);
 
-        // 3. Set tampilan default awal langsung ke Panel Dashboard (a)
-        jScrollWadah.setViewportView(a);
-        
+        // Viewport ikuti ukuran scroll pane
+        jScrollWadah.getViewport().setLayout(new java.awt.BorderLayout());
+
+        // Set panel awal
+        jScrollWadah.getViewport().add(a, java.awt.BorderLayout.CENTER);
+
         jPanelMain.revalidate();
         jPanelMain.repaint();
     }
-    
+
     public void switchPanel(javax.swing.JPanel panelAktif) {
-        jScrollWadah.setViewportView(panelAktif);
+        jScrollWadah.getViewport().removeAll();
+        jScrollWadah.getViewport().setLayout(new java.awt.BorderLayout());
+        jScrollWadah.getViewport().add(panelAktif, java.awt.BorderLayout.CENTER);
         jPanelMain.revalidate();
         jPanelMain.repaint();
     }
@@ -61,7 +66,6 @@ public class Dashboard extends javax.swing.JFrame {
         jButtonMahasiswa = new javax.swing.JButton();
         jButtonDosen = new javax.swing.JButton();
         jButtonMatkul = new javax.swing.JButton();
-        jButtonKRS = new javax.swing.JButton();
         jButtonInputNilai = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jPanelMain = new javax.swing.JPanel();
@@ -79,6 +83,9 @@ public class Dashboard extends javax.swing.JFrame {
 
         jSeparator1.setBackground(new java.awt.Color(204, 204, 204));
 
+        jButtonLogOut.setBackground(new java.awt.Color(204, 0, 51));
+        jButtonLogOut.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButtonLogOut.setForeground(new java.awt.Color(255, 255, 255));
         jButtonLogOut.setText("Log Out");
         jButtonLogOut.addActionListener(this::jButtonLogOutActionPerformed);
 
@@ -94,9 +101,6 @@ public class Dashboard extends javax.swing.JFrame {
         jButtonMatkul.setText("Mata Kuliah");
         jButtonMatkul.addActionListener(this::jButtonMatkulActionPerformed);
 
-        jButtonKRS.setText("KRS");
-        jButtonKRS.addActionListener(this::jButtonKRSActionPerformed);
-
         jButtonInputNilai.setText("Input Nilai");
         jButtonInputNilai.addActionListener(this::jButtonInputNilaiActionPerformed);
 
@@ -107,38 +111,31 @@ public class Dashboard extends javax.swing.JFrame {
         jPanelSidebar.setLayout(jPanelSidebarLayout);
         jPanelSidebarLayout.setHorizontalGroup(
             jPanelSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING)
             .addComponent(jSeparator1)
-            .addComponent(jSeparator2)
             .addGroup(jPanelSidebarLayout.createSequentialGroup()
                 .addGroup(jPanelSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelSidebarLayout.createSequentialGroup()
-                        .addGap(56, 56, 56)
-                        .addComponent(jButtonLogOut))
-                    .addGroup(jPanelSidebarLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jButtonDashboard, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanelSidebarLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jButtonMahasiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanelSidebarLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jButtonDosen, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanelSidebarLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jButtonMatkul, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanelSidebarLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jButtonKRS, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanelSidebarLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jButtonInputNilai, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanelSidebarLayout.createSequentialGroup()
-                        .addGap(51, 51, 51)
-                        .addComponent(jLabel1))
-                    .addGroup(jPanelSidebarLayout.createSequentialGroup()
-                        .addGap(39, 39, 39)
-                        .addComponent(jLabel2)))
-                .addContainerGap(9, Short.MAX_VALUE))
+                        .addGroup(jPanelSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanelSidebarLayout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addComponent(jButtonLogOut, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanelSidebarLayout.createSequentialGroup()
+                                .addGap(51, 51, 51)
+                                .addComponent(jLabel1))
+                            .addGroup(jPanelSidebarLayout.createSequentialGroup()
+                                .addGap(39, 39, 39)
+                                .addComponent(jLabel2)))
+                        .addGap(0, 10, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelSidebarLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(jPanelSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButtonDashboard, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButtonDosen, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButtonMahasiswa, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButtonMatkul, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButtonInputNilai, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap())
         );
         jPanelSidebarLayout.setVerticalGroup(
             jPanelSidebarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -147,28 +144,26 @@ public class Dashboard extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
-                .addGap(20, 20, 20)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 3, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButtonDashboard, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButtonMahasiswa, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButtonDosen, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButtonMatkul, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonKRS, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButtonInputNilai, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonLogOut)
-                .addGap(19, 19, 19))
+                .addComponent(jButtonLogOut, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12))
         );
 
-        getContentPane().add(jPanelSidebar, java.awt.BorderLayout.LINE_START);
+        getContentPane().add(jPanelSidebar, java.awt.BorderLayout.WEST);
 
         jPanelMain.setLayout(new java.awt.BorderLayout());
 
@@ -220,10 +215,6 @@ public class Dashboard extends javax.swing.JFrame {
         switchPanel(d);
     }//GEN-LAST:event_jButtonMatkulActionPerformed
 
-    private void jButtonKRSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonKRSActionPerformed
-        switchPanel(e);
-    }//GEN-LAST:event_jButtonKRSActionPerformed
-
     private void jButtonInputNilaiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonInputNilaiActionPerformed
         switchPanel(f);
     }//GEN-LAST:event_jButtonInputNilaiActionPerformed
@@ -257,7 +248,6 @@ public class Dashboard extends javax.swing.JFrame {
     private javax.swing.JButton jButtonDashboard;
     private javax.swing.JButton jButtonDosen;
     private javax.swing.JButton jButtonInputNilai;
-    private javax.swing.JButton jButtonKRS;
     private javax.swing.JButton jButtonLogOut;
     private javax.swing.JButton jButtonMahasiswa;
     private javax.swing.JButton jButtonMatkul;
