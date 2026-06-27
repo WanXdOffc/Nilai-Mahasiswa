@@ -18,7 +18,7 @@ Berikut adalah beberapa halaman utama yang ada di dalam aplikasi SiNILAI:
 
 ### 1. Halaman Login
 
-![Halaman Dashboard](image/Screenshot 2026-06-27 105959.png)
+![Halaman Login](image/Screenshot 2026-06-27 105959.png)
 
 
 ### 2. Halaman Dashboard
