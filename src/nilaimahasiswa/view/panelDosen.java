@@ -141,7 +141,7 @@ public class panelDosen extends javax.swing.JPanel {
 
         jLabelTotal.setText("Total : " + total + " data");
         jLabelHalaman.setText(
-            "Halaman " + halamanSaatIni + " dari " + totalHal);
+            "Page " + halamanSaatIni + " of " + totalHal);
 
         jButtonNext.setEnabled(!sedangCari && halamanSaatIni < totalHal);
         jButtonBack.setEnabled(!sedangCari && halamanSaatIni > 1);
@@ -178,6 +178,10 @@ public class panelDosen extends javax.swing.JPanel {
         modeEdit     = false;
         sedangCari   = false;
         jTableDataDosen.clearSelection();
+    }
+    
+    public void clearSelection() {
+        resetForm();
     }
 
     // ============================================================
@@ -264,7 +268,7 @@ public class panelDosen extends javax.swing.JPanel {
                 });
             }
 
-            jLabelTotal.setText("Ditemukan : " + hasil.size() + " data");
+            jLabelTotal.setText("Found : " + hasil.size() + " data");
             jLabelHalaman.setText("Mode pencarian");
             jButtonNext.setEnabled(false);
             jButtonBack.setEnabled(false);
@@ -473,7 +477,7 @@ public class panelDosen extends javax.swing.JPanel {
 
         jLabel4.setBackground(new java.awt.Color(0, 0, 0));
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel4.setText("Data Mahasiswa");
+        jLabel4.setText("Data Dosen");
 
         jTableDataDosen.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -500,18 +504,17 @@ public class panelDosen extends javax.swing.JPanel {
             .addGroup(jPanelTabel1Layout.createSequentialGroup()
                 .addGroup(jPanelTabel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelTabel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel4))
-                    .addGroup(jPanelTabel1Layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 631, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanelTabel1Layout.createSequentialGroup()
                         .addGap(231, 231, 231)
                         .addComponent(jButtonBack)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabelHalaman)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButtonNext)))
+                        .addComponent(jButtonNext))
+                    .addGroup(jPanelTabel1Layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addGroup(jPanelTabel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 631, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
         jPanelTabel1Layout.setVerticalGroup(

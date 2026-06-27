@@ -14,7 +14,6 @@ public class Dashboard extends javax.swing.JFrame {
     panelMahasiswa b = new panelMahasiswa();
     panelDosen c = new panelDosen();
     panelMataKuliah d = new panelMataKuliah();
-    panelKRS e = new panelKRS();
     panelInputNilai f = new panelInputNilai();
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Dashboard.class.getName());
 
@@ -41,6 +40,19 @@ public class Dashboard extends javax.swing.JFrame {
     }
 
     public void switchPanel(javax.swing.JPanel panelAktif) {
+        // Reset semua panel sebelum pindah
+        if (panelAktif instanceof panelMahasiswa) {
+            ((panelMahasiswa) panelAktif).clearSelection();
+        } else if (panelAktif instanceof panelDosen) {
+            ((panelDosen) panelAktif).clearSelection();
+        } else if (panelAktif instanceof panelMataKuliah) {
+            ((panelMataKuliah) panelAktif).clearSelection();
+        } else if (panelAktif instanceof panelInputNilai) {
+            ((panelInputNilai) panelAktif).clearSelection();
+        } else if (panelAktif instanceof panelDashboard) {
+            ((panelDashboard) panelAktif).refresh();
+        }
+
         jScrollWadah.getViewport().removeAll();
         jScrollWadah.getViewport().setLayout(new java.awt.BorderLayout());
         jScrollWadah.getViewport().add(panelAktif, java.awt.BorderLayout.CENTER);

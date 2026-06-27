@@ -16,24 +16,38 @@ public class KRSDAO {
     }
 
     public int insert(KRS krs) throws SQLException {
-        String sql = "INSERT INTO krs (nim, kode_mk, score, semester, tahun_ajaran) "
-                   + "VALUES (?,?,?,?,?)";
+        String sql = "INSERT INTO krs "
+                   + "(nim, kode_mk, nilai_sikap, nilai_uts, nilai_uas, "
+                   + "score, grade, semester, tahun_ajaran, nidn_dosen) "
+                   + "VALUES (?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement stmt = connection.prepareStatement(sql);
         stmt.setString(1, krs.getNim());
         stmt.setString(2, krs.getCourse().getCode());
-        stmt.setDouble(3, krs.getScore());
-        stmt.setInt(4, krs.getSemester());
-        stmt.setString(5, krs.getTahunAjaran());
+        stmt.setDouble(3, krs.getNilaiSikap());
+        stmt.setDouble(4, krs.getNilaiUTS());
+        stmt.setDouble(5, krs.getNilaiUAS());
+        stmt.setDouble(6, krs.getScore());
+        stmt.setString(7, krs.getGrade()); 
+        stmt.setInt(8, krs.getSemester());
+        stmt.setString(9, krs.getTahunAjaran());
+        stmt.setString(10, krs.getNidnDosen());
         return stmt.executeUpdate();
     }
 
     public int update(KRS krs) throws SQLException {
-        String sql = "UPDATE krs SET score=?, semester=?, tahun_ajaran=? WHERE id=?";
+        String sql = "UPDATE krs SET nilai_sikap=?, nilai_uts=?, nilai_uas=?, "
+                   + "score=?, grade=?, semester=?, tahun_ajaran=?, nidn_dosen=? "
+                   + "WHERE id=?";
         PreparedStatement stmt = connection.prepareStatement(sql);
-        stmt.setDouble(1, krs.getScore());
-        stmt.setInt(2, krs.getSemester());
-        stmt.setString(3, krs.getTahunAjaran());
-        stmt.setInt(4, krs.getId());
+        stmt.setDouble(1, krs.getNilaiSikap());
+        stmt.setDouble(2, krs.getNilaiUTS());
+        stmt.setDouble(3, krs.getNilaiUAS());
+        stmt.setDouble(4, krs.getScore());
+        stmt.setString(5, krs.getGrade()); 
+        stmt.setInt(6, krs.getSemester());
+        stmt.setString(7, krs.getTahunAjaran());
+        stmt.setString(8, krs.getNidnDosen());
+        stmt.setInt(9, krs.getId());
         return stmt.executeUpdate();
     }
 
@@ -45,45 +59,45 @@ public class KRSDAO {
     }
 
     public List<KRS> findAll() throws SQLException {
-        List<KRS> list = new ArrayList<>();
-        String sql = "SELECT k.*, m.nama AS nama_mk, m.sks, m.semester AS smt_mk "
+        String sql = "SELECT k.*, "
+                   + "mk.nama AS nama_mk, mk.sks, mk.semester AS smt_mk, "
+                   + "d.nama AS nama_dosen "
                    + "FROM krs k "
-                   + "JOIN mata_kuliah m ON k.kode_mk = m.kode "
+                   + "JOIN mata_kuliah mk ON k.kode_mk = mk.kode "
+                   + "LEFT JOIN dosen d ON k.nidn_dosen = d.nidn "
                    + "ORDER BY k.nim";
-        ResultSet rs = connection.createStatement().executeQuery(sql);
-        while (rs.next()) list.add(map(rs));
-        return list;
+        return executeQuery(connection.createStatement().executeQuery(sql));
+    }
+
+    public List<KRS> findPaged(int page, int limit) throws SQLException {
+        String sql = "SELECT k.*, "
+                   + "mk.nama AS nama_mk, mk.sks, mk.semester AS smt_mk, "
+                   + "d.nama AS nama_dosen "
+                   + "FROM krs k "
+                   + "JOIN mata_kuliah mk ON k.kode_mk = mk.kode "
+                   + "LEFT JOIN dosen d ON k.nidn_dosen = d.nidn "
+                   + "ORDER BY k.nim LIMIT ? OFFSET ?";
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setInt(1, limit);
+        stmt.setInt(2, (page - 1) * limit);
+        return executeQuery(stmt.executeQuery());
     }
 
     public List<KRS> findByKeyword(String keyword) throws SQLException {
-        List<KRS> list = new ArrayList<>();
-        String sql = "SELECT k.*, m.nama AS nama_mk, m.sks, m.semester AS smt_mk "
+        String sql = "SELECT k.*, "
+                   + "mk.nama AS nama_mk, mk.sks, mk.semester AS smt_mk, "
+                   + "d.nama AS nama_dosen "
                    + "FROM krs k "
-                   + "JOIN mata_kuliah m ON k.kode_mk = m.kode "
+                   + "JOIN mata_kuliah mk ON k.kode_mk = mk.kode "
+                   + "LEFT JOIN dosen d ON k.nidn_dosen = d.nidn "
                    + "JOIN mahasiswa mhs ON k.nim = mhs.nim "
-                   + "WHERE k.nim LIKE ? OR mhs.nama LIKE ? OR m.nama LIKE ?";
+                   + "WHERE k.nim LIKE ? OR mhs.nama LIKE ? OR mk.nama LIKE ?";
         PreparedStatement stmt = connection.prepareStatement(sql);
         String like = "%" + keyword + "%";
         stmt.setString(1, like);
         stmt.setString(2, like);
         stmt.setString(3, like);
-        ResultSet rs = stmt.executeQuery();
-        while (rs.next()) list.add(map(rs));
-        return list;
-    }
-
-    public List<KRS> findPaged(int page, int limit) throws SQLException {
-        List<KRS> list = new ArrayList<>();
-        String sql = "SELECT k.*, m.nama AS nama_mk, m.sks, m.semester AS smt_mk "
-                   + "FROM krs k "
-                   + "JOIN mata_kuliah m ON k.kode_mk = m.kode "
-                   + "ORDER BY k.nim LIMIT ? OFFSET ?";
-        PreparedStatement stmt = connection.prepareStatement(sql);
-        stmt.setInt(1, limit);
-        stmt.setInt(2, (page - 1) * limit);
-        ResultSet rs = stmt.executeQuery();
-        while (rs.next()) list.add(map(rs));
-        return list;
+        return executeQuery(stmt.executeQuery());
     }
 
     public int count() throws SQLException {
@@ -92,7 +106,14 @@ public class KRSDAO {
         return rs.next() ? rs.getInt(1) : 0;
     }
 
-    private KRS map(ResultSet rs) throws SQLException {
+    // DRY — satu method untuk mapping ResultSet
+    private List<KRS> executeQuery(ResultSet rs) throws SQLException {
+        List<KRS> list = new ArrayList<>();
+        while (rs.next()) list.add(mapToKRS(rs));
+        return list;
+    }
+
+    private KRS mapToKRS(ResultSet rs) throws SQLException {
         Course course = new Course(
             rs.getString("kode_mk"),
             rs.getString("nama_mk"),
@@ -103,9 +124,12 @@ public class KRSDAO {
             rs.getInt("id"),
             rs.getString("nim"),
             course,
-            rs.getDouble("score"),
+            rs.getDouble("nilai_sikap"),
+            rs.getDouble("nilai_uts"),
+            rs.getDouble("nilai_uas"),
             rs.getInt("semester"),
-            rs.getString("tahun_ajaran")
+            rs.getString("tahun_ajaran"),
+            rs.getString("nidn_dosen")
         );
     }
 }

@@ -159,7 +159,7 @@ public class panelMahasiswa extends javax.swing.JPanel {
         jLabelTotal.setText("Total : " + total + " data");
 
         // Label halaman
-        jLabelHalaman.setText("Halaman " + halamanSaatIni + " dari " + totalHal);
+        jLabelHalaman.setText("Page " + halamanSaatIni + " of " + totalHal);
 
         // Enable/disable tombol pagination
         // Sembunyikan pagination saat sedang mencari
@@ -199,6 +199,10 @@ public class panelMahasiswa extends javax.swing.JPanel {
         modeEdit     = false;
         sedangCari   = false;
         jTableDataMahasiswa.clearSelection();
+    }
+    
+    public void clearSelection() {
+        resetForm();
     }
 
     // ============================================================
@@ -286,7 +290,7 @@ public class panelMahasiswa extends javax.swing.JPanel {
             }
 
             // Update label saat pencarian
-            jLabelTotal.setText("Ditemukan : " + hasil.size() + " data");
+            jLabelTotal.setText("Found : " + hasil.size() + " data");
             jLabelHalaman.setText("Mode pencarian");
             jButtonNext.setEnabled(false);
             jButtonBack.setEnabled(false);
@@ -517,18 +521,17 @@ public class panelMahasiswa extends javax.swing.JPanel {
             .addGroup(jPanelTabel1Layout.createSequentialGroup()
                 .addGroup(jPanelTabel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelTabel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel4))
-                    .addGroup(jPanelTabel1Layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 631, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanelTabel1Layout.createSequentialGroup()
                         .addGap(231, 231, 231)
                         .addComponent(jButtonBack)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabelHalaman)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButtonNext)))
+                        .addComponent(jButtonNext))
+                    .addGroup(jPanelTabel1Layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addGroup(jPanelTabel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 631, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(18, Short.MAX_VALUE))
         );
         jPanelTabel1Layout.setVerticalGroup(

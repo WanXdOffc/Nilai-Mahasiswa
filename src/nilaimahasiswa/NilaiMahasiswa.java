@@ -16,9 +16,16 @@ public class NilaiMahasiswa {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
-        new LoginForm().setVisible(true);
-        //new DBConnection().getConnection();
+        try {
+            com.formdev.flatlaf.FlatLightLaf.setup();
+        } catch (Exception ex) {
+            System.err.println("FlatLaf gagal: " + ex);
+        }
+
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new LoginForm().setVisible(true);
+            }
+        });
     }
-    
 }
