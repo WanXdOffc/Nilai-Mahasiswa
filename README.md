@@ -1,10 +1,10 @@
-# SiNILAI - Sistem Informasi Nilai Mahasiswa 🎓
+# SiNILAI - Sistem Informasi Nilai Mahasiswa
 
 Aplikasi desktop berbasis Java (Swing) untuk mempermudah pengelolaan data akademik. Dibuat dengan antarmuka yang modern, bersih, dan rapi menggunakan tema FlatLaf.
 
 ---
 
-## 🎥 Demo Aplikasi
+## Demo Aplikasi
 Preview singkat bagaimana aplikasi ini berjalan saat digunakan. 
 
 ![Demo Aplikasi SiNILAI](masukkan-link-atau-nama-file-gif-kamu-disini.gif)
@@ -12,27 +12,28 @@ Preview singkat bagaimana aplikasi ini berjalan saat digunakan.
 
 ---
 
-## 📸 Tampilan Antarmuka (Screenshots)
+## Tampilan Antarmuka (Screenshots)
 
 Berikut adalah beberapa halaman utama yang ada di dalam aplikasi SiNILAI:
 
 ### 1. Halaman Dashboard
-Halaman pertama yang menyambut pengguna setelah login. Menampilkan kartu ringkasan jumlah data (Mahasiswa, Dosen, Mata Kuliah, KRS) dan tabel riwayat nilai terbaru yang baru masuk.
+
+![Halaman Dashboard](image/Screenshot 2026-06-27 105959.png)
+
+
+### 2. Halaman Dashboard
 
 ![Halaman Dashboard](masukkan-link-foto-dashboard-kamu.jpg)
 
-### 2. Kelola Data Mahasiswa
-Menu untuk mengatur data induk mahasiswa. Form input sengaja diletakkan di bagian atas agar rapi, dan tabel di bawahnya akan otomatis menyesuaikan ukuran layar (responsif) untuk memudahkan pencarian data.
+### 3. Kelola Data Mahasiswa
 
 ![Kelola Data Mahasiswa](masukkan-link-foto-mahasiswa-kamu.jpg)
 
-### 3. Kelola Data Dosen & Mata Kuliah
-Struktur visual yang seragam diterapkan di semua menu agar pengguna tidak bingung. Di sini admin bisa menambah, mengedit, atau menghapus data dosen pengampu dan daftar mata kuliah.
+### 4. Kelola Data Dosen & Mata Kuliah
 
 ![Kelola Dosen](masukkan-link-foto-dosen-kamu.jpg)
 
-### 4. Form Input Nilai
-Halaman krusial tempat admin memasukkan dan merekap nilai akhir mahasiswa berdasarkan mata kuliah yang diambil.
+### 5. Form Input Nilai
 
 ![Halaman Input Nilai](masukkan-link-foto-input-nilai-kamu.jpg)
 
