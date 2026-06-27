@@ -38,7 +38,7 @@ Berikut adalah beberapa halaman utama yang ada di dalam aplikasi SiNILAI:
 
 ### 5. Form Input Nilai
 
-![Halaman Input Nilai](image/input-nilai)
+![Halaman Input Nilai](image/input-nilai.png)
 
 ---
 
@@ -58,5 +58,7 @@ Berikut adalah beberapa halaman utama yang ada di dalam aplikasi SiNILAI:
 ---
 
 ## Database MySQL ( Relation )
-* Preview :
+### Preview :
+
+
 ![Database Relation Diagram](image/database-relation.png)
