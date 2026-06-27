@@ -7,8 +7,9 @@ Aplikasi desktop berbasis Java (Swing) untuk mempermudah pengelolaan data akadem
 ## Demo Aplikasi
 Preview singkat bagaimana aplikasi ini berjalan saat digunakan. 
 
-![Demo Aplikasi SiNILAI](masukkan-link-atau-nama-file-gif-kamu-disini.gif)
-*(Keterangan: Navigasi antar menu dan contoh penginputan data)*
+![Demo Aplikasi SiNILAI](image/ezgif-7c84cab3ff35f69c.gif)
+
+Link Video : 
 
 ---
 
@@ -18,24 +19,26 @@ Berikut adalah beberapa halaman utama yang ada di dalam aplikasi SiNILAI:
 
 ### 1. Halaman Login
 
-![Halaman Login](image/Screenshot 2026-06-27 105959.jpg)
+![Halaman Login](image/login.png)
 
 
 ### 2. Halaman Dashboard
 
-![Halaman Dashboard](masukkan-link-foto-dashboard-kamu.jpg)
+![Halaman Dashboard](image/dashboard.png)
 
 ### 3. Kelola Data Mahasiswa
 
-![Kelola Data Mahasiswa](masukkan-link-foto-mahasiswa-kamu.jpg)
+![Kelola Data Mahasiswa](image/mahasiswa.png)
 
 ### 4. Kelola Data Dosen & Mata Kuliah
 
-![Kelola Dosen](masukkan-link-foto-dosen-kamu.jpg)
+![Kelola Dosen](image/dosen.png)
+
+![Kelola Mata Kuliah](image/mata-kuliah.png)
 
 ### 5. Form Input Nilai
 
-![Halaman Input Nilai](masukkan-link-foto-input-nilai-kamu.jpg)
+![Halaman Input Nilai](image/input-nilai)
 
 ---
 
@@ -51,3 +54,9 @@ Berikut adalah beberapa halaman utama yang ada di dalam aplikasi SiNILAI:
 3. Buka project menggunakan NetBeans.
 4. Pastikan library `mysql-connector-j` dan `flatlaf` sudah ditambahkan ke dalam *Libraries* project.
 5. Jalankan file utama (Main Class) projectnya.
+
+---
+
+## Database MySQL ( Relation )
+* Preview :
+![Database Relation Diagram](image/database-relation.png)
