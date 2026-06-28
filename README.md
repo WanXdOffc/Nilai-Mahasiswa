@@ -11,7 +11,7 @@ Preview singkat bagaimana aplikasi ini berjalan saat digunakan.
 
 ![Demo Aplikasi SiNILAI](image/ezgif-7f7d7e8449cfd7cb.gif)
 
-Link Video : 
+Link Video : https://youtu.be/erk-rMAPyEU
 
 ---
 
